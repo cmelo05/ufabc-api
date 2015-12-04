@@ -33,16 +33,16 @@ object ServerAPI extends App with SimpleRoutingApp {
   import spray.httpx.SprayJsonSupport._
   implicit val actorSystem = ActorSystem()
   
-  startServer(interface = "localhost", port = 8080) {
-    get {
+  startServer(interface = "localhost", port = 50501) {   
       path("hello"){
+        get {
         complete {
           "Welcome to the server"
         }
       }
-    }
-    put {
+    }~   
        path("test_end_point") {
+         put {
         entity(as[Array[Disciplina]]) { disciplinas =>
         disciplinas.foreach {println}
         complete(disciplinas.toString())
