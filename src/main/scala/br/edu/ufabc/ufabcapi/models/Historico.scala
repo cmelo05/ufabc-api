@@ -1,5 +1,7 @@
 package main.scala.br.edu.ufabc.ufabcapi.models
 
-class Historico(disciplinas: Array[Disciplina]) {
+import main.scala.br.edu.ufabc.ufabcapi.models._
+
+class Historico (val discplinas: Array[Disciplina]){
   
 }
