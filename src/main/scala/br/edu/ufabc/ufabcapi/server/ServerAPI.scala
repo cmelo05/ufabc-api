@@ -7,6 +7,10 @@ import spray.json.DefaultJsonProtocol
 import spray.httpx.unmarshalling._
 import spray.httpx.marshalling._
 import main.scala.br.edu.ufabc.ufabcapi.models._
+import scala.io.Source._
+import org.json4s._
+import org.json4s.native.JsonMethods._
+import org.json4s.native.Serialization.write
 
 /**
  * Classe usada para manipular dados JSON de disciplina
@@ -16,6 +20,7 @@ case class DisciplinaObject (override val codigo: String, override val ano: Int,
     override val periodo: String, override val conceito: String ) extends Disciplina{
 }
 
+case class DisciplinaShort(val codigo: String, val nome: String, val creditos: Int)
 
 /**
  * Criado por: Caio Cezar de Melo - RA: 11102010
@@ -29,6 +34,7 @@ object DisciplinaProtocol extends DefaultJsonProtocol {
   implicit val disciplinaFormat = jsonFormat8(DisciplinaObject)
 }
 
+
 object ServerAPI extends App with SimpleRoutingApp {
   import DisciplinaProtocol._
   import spray.httpx.SprayJsonSupport._
@@ -36,35 +42,44 @@ object ServerAPI extends App with SimpleRoutingApp {
   
   startServer(interface = "localhost", port = 50501) {  
     println("O servidor foi iniciado")
-      path("hello"){
-        get {
-        complete {
-          "Welcome to the server"
+    /**
+     * Esta diretiva recebe uma solicitacao post no caminho retona / String com um JSON de disciplinas e retona
+     * o CR ou o CA
+     */
+    post{
+      path("retorna" / Segment) {
+        tipo => {
+          entity(as[Array[DisciplinaObject]]) { disciplinas =>
+            tipo.toUpperCase() match {
+              case "CR" => complete(RetornaCR(disciplinas).toString())
+              case "CA" => complete(RetornaCA(disciplinas).toString())
+            }
+          }
         }
       }
-    }~   
-       path("test_end_point") {
-         put {
-        entity(as[Array[DisciplinaObject]]) { disciplinas =>
-        disciplinas.foreach {println}
-        complete(disciplinas.toString())
+    }~
+    get{
+      path("retorna" / Segment / IntNumber) {
+        (tipo, ano) => {
+          tipo.toUpperCase() match{
+            case "DISCIPLINAS" => {
+              respondWithMediaType(MediaTypes.`application/json`)
+              complete(RetornaDisciplinaAno(ano))
+            }
+          }
+        }
+      }~
+      path("retorna" / Segment / IntNumber / Segment) {
+        (tipo, ano, codigo) => {
+          tipo.toUpperCase() match{
+            case "DISCIPLINAS" => {
+              respondWithMediaType(MediaTypes.`application/json`)
+              complete(RetonarDeterminadaDisciplinaAno(ano,codigo))
+            }
+          }
+        }
       }
-    }
-  }~
-  path("retornacr"){
-    post{
-      entity(as[Array[DisciplinaObject]]) { disciplinas =>
-        complete(RetornaCR(disciplinas).toString())
-      }
-    }
-  }~
-  path("retornaca"){
-    post{
-      entity(as[Array[DisciplinaObject]]) { disciplinas =>
-        complete(RetornaCA(disciplinas).toString())
-      }
-    }
-  }
+    } 
   }
   
   /**
@@ -79,9 +94,8 @@ object ServerAPI extends App with SimpleRoutingApp {
     
     var cr: Float = 0
     var creditosCursados: Int = 0
-    
+
     for(dis <- disciplinas){
-      println(dis.toString())
       cr += dis.CalculoUnitario()   
       creditosCursados += dis.creditos
     }
@@ -120,18 +134,47 @@ object ServerAPI extends App with SimpleRoutingApp {
     ca
   }
   
-  def RetornaCSV(disciplinas: Array[DisciplinaObject]): String = {
-    println("Operacao de retonar CSV foi solicitada")
-    var teste: String = "" 
-
-    for(dis <- disciplinas){
-      StringBuilder sb = new StrinbBuilder();
-      sb.
-    }
-     teste.addString(dis.toString())
-   
+  /**
+   * Entrada: ano a ser procurado nas Resources
+   * Saida: JSON formatado com os dados das disciplinas
+   */
+  def RetornaDisciplinaAno(ano: Int): String = {
+    val arq = "grade"+ano.toString()+".json"
+    pretty(render(LerArquivo(arq)))
   }
   
+  /**
+   * Entrada: ano e codigo
+   * Saida: String formatada com o JSON
+   * 
+   * Esse metodo recebe um ano e um codigo e filtra todas as disciplinas daquela
+   * matriz que tenham o codigo recebido
+   */
+  def RetonarDeterminadaDisciplinaAno(ano: Int, codigo: String): String = {
+    implicit val formats = DefaultFormats
+    
+    val arq = "grade"+ano.toString()+".json"
+    
+    val objetos = (LerArquivo(arq)).extract[List[DisciplinaShort]]
+    
+    val disciplina = objetos.filter(_.codigo == codigo)
+    
+    write(disciplina)
+  }
 
+
+  /**
+   * Entrada: Nome de um Arquivo
+   * Saida: Objeto do tipo JValue
+   * 
+   * Esse metodo recebe o nome de um arquivo e faz o parse da String de retorno
+   */
+def LerArquivo(nomeDoArquivo: String): JValue = {
+    val path = this.getClass.getResource(nomeDoArquivo).toURI()
+  
+    val arquivoLido = scala.io.Source.fromFile(path)("UTF-8").getLines().mkString
+    
+    parse(arquivoLido)
+}
 
 }

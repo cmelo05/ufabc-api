@@ -1,0 +1,132 @@
+[
+  {
+    "codigo": "BC0001",
+    "nome": "Base Experimental das Ciências Naturais",
+    "creditos": 5
+  },
+  {
+    "codigo": "BC0002",
+    "nome": "Projeto Dirigido",
+    "creditos": 4
+  },
+  {
+    "codigo": "BC0003",
+    "nome": "Bases Matemáticas",
+    "creditos": 5
+  },
+  {
+    "codigo": "BC0004",
+    "nome": "Bases Epistemológicas da Ciência Moderna",
+    "creditos": 2
+  },
+  {
+    "codigo": "BC0005",
+    "nome": "Bases Computacionais da Ciência",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0102",
+    "nome": "Estrutura da Matéria",
+    "creditos": 5
+  },
+  {
+    "codigo": "BC0103",
+    "nome": "Física Quântica",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0104",
+    "nome": "Interações Atômicas e Moleculares",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0205",
+    "nome": "Fenômenos Térmicos",
+    "creditos": 4
+  },
+  {
+    "codigo": "BC0207",
+    "nome": "Energia: Origens, Conversão e Uso",
+    "creditos": 4
+  },
+  {
+    "codigo": "BC0208",
+    "nome": "Fenômenos Mecânicos",
+    "creditos": 4
+  },
+  {
+    "codigo": "BC0209",
+    "nome": "Fenômenos Eletromagnéticos",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0304",
+    "nome": "Origem da Vida e Diversidade dos Seres Vivos",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0306",
+    "nome": "Transformações nos Seres Vivos e Ambiente",
+    "creditos": 5
+  },
+  {
+    "codigo": "BC0307",
+    "nome": "Transformações Químicas",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0308",
+    "nome": "Transformações Bioquímicas",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0402",
+    "nome": "Funções de Uma Variável",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0404",
+    "nome": "Geometria Analítica",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0405",
+    "nome": "Introdução às Equações Diferenciais Ordinárias",
+    "creditos": 5
+  },
+  {
+    "codigo": "BC0406",
+    "nome": "Introdução à Probabilidade e à Estatística",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0407",
+    "nome": "Funções de Várias Variáveis",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0504",
+    "nome": "Natureza da Informação",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0505",
+    "nome": "Processamento da Informação",
+    "creditos": 3
+  },
+  {
+    "codigo": "BC0506",
+    "nome": "Comunicação e Redes",
+    "creditos": 2
+  },
+  {
+    "codigo": "BC0602",
+    "nome": "Estrutura e Dinâmica Social",
+    "creditos": 2
+  },
+  {
+    "codigo": "BC0603",
+    "nome": "Ciência, Tecnologia e Sociedade",
+    "creditos": 4
+  }
+]

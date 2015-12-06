@@ -13,7 +13,8 @@ libraryDependencies ++= {
     "io.spray"            %%  "spray-json"    % "1.3.2",
     "io.spray"            %%  "spray-httpx"   % sprayV,
     "io.spray"            %%  "spray-http"   % sprayV,
-    "com.typesafe.akka"   %%  "akka-actor"    % akkaV
+    "com.typesafe.akka"   %%  "akka-actor"    % akkaV,
+    "org.json4s"          %% "json4s-native" % "3.3.0"
   )
 }
 
