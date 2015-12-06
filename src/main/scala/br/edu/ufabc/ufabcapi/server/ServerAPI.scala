@@ -16,7 +16,7 @@ import org.json4s.native.Serialization.write
  * Classe usada para manipular dados JSON de disciplina
  */
 case class DisciplinaObject (override val codigo: String, override val ano: Int, override val disciplina: String,
-    override val categoria: String, override val creditos: Int, override val situacao: String,
+    override val categoria: String, override val creditos: Int, override val situacao: Option[String],
     override val periodo: String, override val conceito: String ) extends Disciplina{
 }
 
@@ -120,15 +120,20 @@ object ServerAPI extends App with SimpleRoutingApp {
     
     for(dis <- disciplinas){
       dis.situacao match{
-        case "Aprovado" => {
-          ca += dis.CalculoUnitario()
-          creditosCursados += dis.creditos
+        case Some(d) =>{
+          d match {
+            case "Aprovado" => {
+              ca += dis.CalculoUnitario()
+              creditosCursados += dis.creditos
+            }
+            case "Reprovado" => {}
+            case "Repr.Freq" => {}
+           }
         }
-        case "Reprovado" => {}
-        case "Repr.Freq" => {}
       }
     }
-    
+  
+      
     ca /= creditosCursados
     
     ca

@@ -18,7 +18,7 @@ trait Disciplina {
   def disciplina: String
   def categoria: String
   def creditos: Int
-  def situacao: String
+  def situacao: Option[String]
   def periodo: String
   def conceito: String
   
