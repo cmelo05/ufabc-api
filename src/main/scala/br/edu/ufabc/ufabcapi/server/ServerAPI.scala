@@ -32,8 +32,8 @@ case class DisciplinaShort(val codigo: String, val nome: String, val creditos: I
 
 object DisciplinaProtocol extends DefaultJsonProtocol {
   implicit val disciplinaFormat = jsonFormat8(DisciplinaObject)
+  implicit val disciplinaShortFormat = jsonFormat3(DisciplinaShort)
 }
-
 
 object ServerAPI extends App with SimpleRoutingApp {
   import DisciplinaProtocol._
@@ -53,6 +53,27 @@ object ServerAPI extends App with SimpleRoutingApp {
             tipo.toUpperCase() match {
               case "CR" => complete(RetornaCR(disciplinas).toString())
               case "CA" => complete(RetornaCA(disciplinas).toString())
+            }
+          }
+        }
+      }~
+      path("retorna" / "quantidade" / Segment){
+        conceito => {
+          entity(as[Array[DisciplinaObject]]) { disciplinas =>
+            {
+              complete(RetornaQuantidadeConceito(disciplinas,conceito).toString())
+            }
+          }
+        }
+      }~
+      path("insere" / "grade" / Segment){
+        curso => {
+          entity(as[Array[DisciplinaShort]]) { disciplinas =>
+            {
+              InsereGrade(disciplinas,curso) match {
+                case true => complete(curso + " adicionado com sucesso")
+                case false => complete(curso + " não foi inserido")
+              }
             }
           }
         }
@@ -120,7 +141,7 @@ object ServerAPI extends App with SimpleRoutingApp {
     
     for(dis <- disciplinas){
       dis.situacao match{
-        case Some(d) =>{
+        case Some(d) => {
           d match {
             case "Aprovado" => {
               ca += dis.CalculoUnitario()
@@ -129,11 +150,11 @@ object ServerAPI extends App with SimpleRoutingApp {
             case "Reprovado" => {}
             case "Repr.Freq" => {}
            }
-        }
+         }
+        case None => {}
       }
     }
-  
-      
+    
     ca /= creditosCursados
     
     ca
@@ -180,6 +201,34 @@ def LerArquivo(nomeDoArquivo: String): JValue = {
     val arquivoLido = scala.io.Source.fromFile(path)("UTF-8").getLines().mkString
     
     parse(arquivoLido)
+}
+
+def RetornaQuantidadeConceito(disciplinas: Array[DisciplinaObject], conceito: String): Int = {
+  val disciplinasFiltro = disciplinas.filter { dis => dis.conceito.equals(conceito) }
+  
+  disciplinasFiltro.size  
+}
+
+/**
+ * Not working at the moment
+ */
+def InsereGrade(disciplinas: Array[DisciplinaShort], nome: String): Boolean = {
+  import java.io._
+  implicit val formats = DefaultFormats
+
+  val json = write(disciplinas)
+
+  val writer = new PrintWriter(new File(nome+".json"))
+  
+  try {
+    writer.write(json)
+    return true
+  } catch {
+    case e: Throwable => {
+      println(e.toString()) 
+      return false
+      }
+  }  
 }
 
 }
